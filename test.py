@@ -1,106 +1,62 @@
-import urllib2	#to interact with urls
-import os		#to interact with os
-import re 		#to use regular expressions
-from bs4 import BeautifulSoup
-import xml.etree.ElementTree as ET
-# import sqlite
+from GitterClasses import *
 
-# submission class
-class Submission:
-	"""docstring for submission"""
-	def __init__(self, sid, verdict, link, lang):
-		self.sid = sid
-		self.verdict = verdict
-		self.link = link
-		self.lang = lang
+# problemlist = [ Problem('LTIME32', '/LTIME32/status/TRIANGCL,anurageldorado', []),
+				# Problem('JAN15', '/JAN15/status/ONEKING,anurageldorado', []),
+				# Problem('JAN16', '/JAN16/status/DEVPERF,anurageldorado', []),
+				# Problem('Practice Problems', '/status/CHRECT,anurageldorado', [])]
 
+problemlist = []
 
-#problem class
-class Problem:
+def buildProblemListAndFileStructure():
+	user = 'gr8raghav'
+	url = 'https://www.codechef.com/users/' + user
 
-	def __init__(self, contestcode, statuslink, submission_list):
-		self.contestcode = contestcode
-		self.statuslink = statuslink
-		self.submission_list = []
-		self.pcode = self.getPcodeFromStatusLink(statuslink)
+	response = urllib2.urlopen(url)		#open webpage
+	html = response.read()
 
-	def getPcodeFromStatusLink(self, statuslink):
-		pattern = '[A-Z0-9]*,'
-		pcode = re.search(pattern, statuslink)
-		pcode = pcode.group(0)
-		pcode = pcode[:-1]						# remove , form 'KSPHERES,'
-		return pcode
+	soup = BeautifulSoup(html, "html.parser")
+	tds = soup.findAll('td')
+	tdps = soup.findAll('p')
 
-	def updateSubmittionList(self):
-		print 'Updating submittion list for ' + self.pcode
-		url = 'https://www.codechef.com' + self.statuslink
-		print url
-		response = urllib2.urlopen(url)		#open webpage
-		html = response.read()
-		soup = BeautifulSoup(html, 'html.parser')
-		rows = soup.findAll('tr', { 'class' : 'kol' })
-		print str(len(rows)) + ' submittions found.'
-		for row in rows:
-			tds = row.findAll('td')
+	finaltdp = []
+	for tdp in tdps:
+		if len(tdp.findAll('b')) != 0 and len(tdp.findAll('span')) != 0:
+			finaltdp.append(tdp)
 
-			verdict = tds[3].find('span')['title']
-			if verdict != 'accepted' and verdict != '':
-				# print '\n~ Continued ~\n'
-				continue
-			else:
-				pass
+	if not os.path.exists('CodechefGitterSolutions/'):		# if directory doesn't exist
+		print 'Creating Directory: CodechefGitterSolutions/'
+		os.makedirs('CodechefGitterSolutions/')
 
-			sid = tds[0].get_text()
-			lang = tds[6].get_text()
-			link = 'https://www.codechef.com' + tds[7].find('a')['href'].replace('viewsolution', 'viewplaintext')
+	for tdp in finaltdp:
+		contestcode = tdp.find('b')
+		contestcode = contestcode.get_text()
+		print contestcode
 
-			self.submission_list.append(Submission(sid, verdict, link, lang))
-			print len(self.submission_list)
+		if not os.path.exists('CodechefGitterSolutions/' + contestcode + '/'):		# if directory doesn't exist
+			# print 'Creating Directory: CodechefGitterSolutions/' + contestcode + '/'
+			os.makedirs('CodechefGitterSolutions/' + contestcode + '/')				# create directory 
+
+		problems = tdp.findAll('a');
+
+		for problem in problems:
+			print '--> ' + problem['href']
+			problemlist.append(Problem(contestcode, problem['href'], []))	# instantiate object and add to list
+
+	print str(len(problemlist)) + ' problems found.\n'
+
+def updateSubmissionList():
+	# fill submission details in submissionlist of each problem
+	print 'Updating submission details.'
+	for problem in problemlist:
+		problem.updateSubmissionList()
 
 
+def fetchSubmissions():
+	print 'Fetching all accepted solutions.'
+	for problem in problemlist:
+		problem.fetchAllSubmissions()
+		pass
 
-
-
-
-
-
-# user = 'anurageldorado'
-# url = 'https://www.codechef.com/users/' + user
-
-# response = urllib2.urlopen(url)		#open webpage
-# html = response.read()
-
-# print 'Response 1 Recieved'
-
-# soup = BeautifulSoup(html, "html.parser")
-# tds = soup.findAll('td')
-# tdps = soup.findAll('p')
-
-# finaltdp = []
-# for tdp in tdps:
-# 	if len(tdp.findAll('b')) != 0 and len(tdp.findAll('span')) != 0:
-# 		finaltdp.append(tdp)
-
-problemlist = [ # Problem('LTIME32', '/LTIME32/status/TRIANGCL,anurageldorado', []),
-				Problem('JAN16', '/JAN16/status/DEVPERF,anurageldorado', []),
-				Problem('Practice Problems', '/status/CHRECT,anurageldorado', [])]
-
-# for tdp in finaltdp:
-# 	contestcode = tdp.find('b')
-# 	print contestcode.get_text()
-# 	problems = tdp.findAll('a');
-
-# 	for problem in problems:
-# 		print '--> ' + problem['href']
-# 		# pcode = re.search(pattern, problem['href'])
-# 		# pcode = pcode.group(0)
-# 		# pcode = pcode[:-1]							# remove , form 'KSPHERES,'
-# 		problemlist.append(Problem(contestcode.get_text(), problem['href'], []))	# instantiate object and add to list
-
-
-print str(len(problemlist)) + ' problems found.'
-
-#append submission details to submissionlist of each problem
-for problem in problemlist:
-	pass
-	problem.updateSubmittionList()
+buildProblemListAndFileStructure()
+updateSubmissionList()
+fetchSubmissions()
