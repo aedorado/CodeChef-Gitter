@@ -25,10 +25,16 @@ class Problem:
 		url = 'https://www.codechef.com' + self.statuslink
 		print url
 		response = urllib2.urlopen(url)		#open webpage
+		html = response.read()
 		soup = BeautifulSoup(html, 'html.parser')
-		rows = soup.findAll('tr')#, { 'class' : 'kol' })
+		rows = soup.findAll('tr', { 'class' : 'kol' })
 		print str(len(rows)) + ' submittions found.'
-		pass
+		for row in rows:
+			tds = row.find('td')
+
+			
+
+			pass
 
 
 user = 'divyanshumehta'
