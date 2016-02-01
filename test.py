@@ -12,9 +12,17 @@ user = Config.user
 def buildProblemListAndFileStructure():
 	url = 'https://www.codechef.com/users/' + user
 
-	response = urllib2.urlopen(url)		#open webpage
-	html = response.read()
+	OK = False
+	while OK is False:
+		try:
+			response = urllib2.urlopen(url)		#open webpage
+			print 'Success'
+			OK = True;
+		except urllib2.HTTPError, e:
+			print 'Failure.\nAn HTTP error occured : ' + str(e.code)
+			print 'Refetching..'
 
+	html = response.read()
 	soup = BeautifulSoup(html, "html.parser")
 	tds = soup.findAll('td')
 	tdps = soup.findAll('p')
