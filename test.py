@@ -7,8 +7,9 @@ from GitterClasses import *
 
 problemlist = []
 
+user = Config.user
+
 def buildProblemListAndFileStructure():
-	user = 'gr8raghav'
 	url = 'https://www.codechef.com/users/' + user
 
 	response = urllib2.urlopen(url)		#open webpage
@@ -23,18 +24,18 @@ def buildProblemListAndFileStructure():
 		if len(tdp.findAll('b')) != 0 and len(tdp.findAll('span')) != 0:
 			finaltdp.append(tdp)
 
-	if not os.path.exists('CodechefGitterSolutions/'):		# if directory doesn't exist
-		print 'Creating Directory: CodechefGitterSolutions/'
-		os.makedirs('CodechefGitterSolutions/')
+	if not os.path.exists(user + '_CodechefGitterSolutions/'):		# if directory doesn't exist
+		print 'Creating Directory: ' + user + '_CodechefGitterSolutions/'
+		os.makedirs(user + '_CodechefGitterSolutions/')
 
 	for tdp in finaltdp:
 		contestcode = tdp.find('b')
 		contestcode = contestcode.get_text()
 		print contestcode
 
-		if not os.path.exists('CodechefGitterSolutions/' + contestcode + '/'):		# if directory doesn't exist
+		if not os.path.exists(user + '_CodechefGitterSolutions/' + contestcode + '/'):		# if directory doesn't exist
 			# print 'Creating Directory: CodechefGitterSolutions/' + contestcode + '/'
-			os.makedirs('CodechefGitterSolutions/' + contestcode + '/')				# create directory 
+			os.makedirs(user + '_CodechefGitterSolutions/' + contestcode + '/')				# create directory 
 
 		problems = tdp.findAll('a');
 
@@ -44,18 +45,25 @@ def buildProblemListAndFileStructure():
 
 	print str(len(problemlist)) + ' problems found.\n'
 
-def updateSubmissionList():
-	# fill submission details in submissionlist of each problem
+totalFetchCount = 0
+def updateSubmissionList():		# fill submission details in submissionlist of each problem
+	global totalFetchCount
 	print 'Updating submission details.'
+	i = 0;
+	total = len(problemlist)
 	for problem in problemlist:
 		problem.updateSubmissionList()
-
+		i = i + 1
+		print str(float(i * 100) / total) + '% done.\n'
+		totalFetchCount = totalFetchCount + len(problem.submissionList)
 
 def fetchSubmissions():
-	print 'Fetching all accepted solutions.'
+	print 'Fetching all required solutions (' + str(totalFetchCount) + ' total)'
+	fetchedCount = 0
 	for problem in problemlist:
 		problem.fetchAllSubmissions()
-		pass
+		fetchedCount = fetchedCount + len(problem.submissionList)
+	print str(float(fetchedCount * 100) / totalFetchCount) + '% done.\n'
 
 buildProblemListAndFileStructure()
 updateSubmissionList()

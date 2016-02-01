@@ -5,6 +5,7 @@ def getExtension(lang):
 
 # submission class
 class Submission:
+
 	def __init__(self, sid, verdict, link, lang, contestcode, pcode):
 		self.sid = sid
 		self.verdict = verdict
@@ -13,13 +14,24 @@ class Submission:
 		self.contestcode = contestcode
 		self.pcode = pcode
 
-	def fetchCode(self, i):
+	def fetchAndSave(self, i):
 		print 'Fetching '+ self.contestcode + '/' + self.pcode + '_' + str(i) + ' in ' + self.lang
-		response = urllib2.urlopen(self.link)		#open webpage
+		OK = False
+		while OK is False:
+			try:
+				response = urllib2.urlopen(self.link)		#open webpage
+				print 'Success'
+				OK = True;
+			except urllib2.HTTPError, e:
+				print 'Failure.\nAn HTTP error occured : ' + str(e.code)
+				print 'Refetching..'
+    	# except urllib2.URLError, e:
+    	# 	print e.args
+
 		html = response.read()
 		if i != 0:
-			opfile = open('CodechefGitterSolutions\\' + self.contestcode + '\\' + self.pcode  + '_' + str(i) + getExtension(self.lang), 'w')
+			opfile = open(Config.user + '_CodechefGitterSolutions\\' + self.contestcode + '\\' + self.pcode + '_' + str(i) + '_' + str(self.sid) + getExtension(self.lang), 'w')
 		else:
-			opfile = open('CodechefGitterSolutions\\' + self.contestcode + '\\' + self.pcode  + '_' + str(i) + getExtension(self.lang), 'w')
+			opfile = open(Config.user + '_CodechefGitterSolutions\\' + self.contestcode + '\\' + self.pcode + '_' + str(i) + '_' + str(self.sid) + getExtension(self.lang), 'w')
 		opfile.write(HTMLParser.HTMLParser().unescape(html)[5:-6])
 		pass

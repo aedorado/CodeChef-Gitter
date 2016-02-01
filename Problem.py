@@ -17,14 +17,27 @@ class Problem:
 		return pcode
 
 	def updateSubmissionList(self):
+
 		print 'Updating submittion list for ' + self.pcode
 		url = 'https://www.codechef.com' + self.statuslink
 		print url
-		response = urllib2.urlopen(url)		#open webpage
+
+		OK = False
+		while OK is False:
+			try:
+				response = urllib2.urlopen(url)		#open webpage
+				print 'Success'
+				OK = True;
+			except urllib2.HTTPError, e:
+				print 'Failure.\nAn HTTP error occured : ' + str(e.code)
+				print 'Refetching..'
+
 		html = response.read()
 		soup = BeautifulSoup(html, 'html.parser')
 		rows = soup.findAll('tr', { 'class' : 'kol' })
 		print str(len(rows)) + ' submittions found.'
+		accepted_sols = 0
+
 		for row in rows:
 			tds = row.findAll('td')
 
@@ -37,19 +50,34 @@ class Problem:
 					if points.find('100') == -1:
 						continue
 					verdict = 'accepted'
-
+			
+			accepted_sols = accepted_sols + 1
 
 			sid = tds[0].get_text()
+
+			path_list = glob.glob(Config.user + '_CodechefGitterSolutions/' + self.contestcode +'/*' + self.pcode + '*')
+			
+			cont = False
+			for path in path_list:
+				if path.find(sid) != -1:
+					print str(sid) + ' already available.'
+					cont = True
+					break
+			
+			if cont:
+				continue
+
 			lang = tds[6].get_text()
 			link = 'https://www.codechef.com' + tds[7].find('a')['href'].replace('viewsolution', 'viewplaintext')
 
 			self.submissionList.append(Submission(sid, verdict, link, lang, self.contestcode, self.pcode))
 
-		print str(len(self.submissionList)) + ' accepted.\n'
+		print str(accepted_sols) + ' accepted submissions.'
+		print str(len(self.submissionList)) + ' need to be updated.'
 
 	def fetchAllSubmissions(self):
 		i = 0
 		for submission in self.submissionList:
-			submission.fetchCode(i)
+			submission.fetchAndSave(i)
 			i = i + 1
 		pass
