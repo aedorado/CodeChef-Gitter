@@ -55,7 +55,7 @@ class Problem:
 
 			sid = tds[0].get_text()
 
-			path_list = glob.glob(Config.user + '_CodechefGitterSolutions/' + self.contestcode +'/*' + self.pcode + '*')
+			path_list = glob.glob(Config.codechefUser + '_CodechefGitterSolutions/' + self.contestcode +'/*' + self.pcode + '*')
 			
 			cont = False
 			for path in path_list:

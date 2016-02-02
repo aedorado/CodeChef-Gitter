@@ -1,4 +1,7 @@
 class Config(object):
-	user = 'rexcoding'
+	codechefUser = ''
+	githubUser = ''
+	gitpasswd = ''
+
 	pass
     

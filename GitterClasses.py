@@ -1,17 +1,13 @@
-import urllib2	#to interact with urls
-import os		#to interact with os
-import re 		#to use regular expressions
-import sys
+import urllib2	# to interact with urls
+import os		# to interact with os
+import re 		# to use regular expressions
+import sys		
 import HTMLParser
-import glob
-
-# from git import *
-from bs4 import BeautifulSoup
-import sqlite3 as db
+import glob		# to read directories
+import getpass	# to safely get password
+from bs4 import BeautifulSoup	# to parse scraped webpage
 
 from Config import *
 from Submission import *
 from Problem import *
-# from func import *
-
-# sys.stdout = open('log_file', 'w+')
+import Chef

@@ -1,15 +1,8 @@
 from GitterClasses import *
 
-# problemlist = [ Problem('LTIME32', '/LTIME32/status/TRIANGCL,anurageldorado', []),
-				# Problem('JAN15', '/JAN15/status/ONEKING,anurageldorado', []),
-				# Problem('JAN16', '/JAN16/status/DEVPERF,anurageldorado', []),
-				# Problem('Practice Problems', '/status/CHRECT,anurageldorado', [])]
-
 problemlist = []
 
-user = Config.user
-
-def buildProblemListAndFileStructure():
+def buildProblemListAndFileStructure(user):
 	url = 'https://www.codechef.com/users/' + user
 
 	OK = False
@@ -22,9 +15,8 @@ def buildProblemListAndFileStructure():
 			print 'Failure.\nAn HTTP error occured : ' + str(e.code)
 			print 'Refetching..'
 
-	html = response.read()
+	html = response.read()						#read the response
 	soup = BeautifulSoup(html, "html.parser")
-	tds = soup.findAll('td')
 	tdps = soup.findAll('p')
 
 	finaltdp = []
@@ -62,7 +54,7 @@ def updateSubmissionList():		# fill submission details in submissionlist of each
 	for problem in problemlist:
 		problem.updateSubmissionList()
 		i = i + 1
-		print str(float(i * 100) / total) + '% done.\n'
+		print str(float(i * 100) / total)[0:5] + '% done.\n'
 		totalFetchCount = totalFetchCount + len(problem.submissionList)
 
 def fetchSubmissions():
@@ -71,8 +63,4 @@ def fetchSubmissions():
 	for problem in problemlist:
 		problem.fetchAllSubmissions()
 		fetchedCount = fetchedCount + len(problem.submissionList)
-	print str(float(fetchedCount * 100) / totalFetchCount) + '% done.\n'
-
-buildProblemListAndFileStructure()
-updateSubmissionList()
-fetchSubmissions()
+		print str(float(fetchedCount * 100) / totalFetchCount)[0:5] + '% done.\n'

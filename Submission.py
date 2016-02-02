@@ -30,8 +30,8 @@ class Submission:
 
 		html = response.read()
 		if i != 0:
-			opfile = open(Config.user + '_CodechefGitterSolutions\\' + self.contestcode + '\\' + self.pcode + '_' + str(i) + '_' + str(self.sid) + getExtension(self.lang), 'w')
+			opfile = open(Config.codechefUser + '_CodechefGitterSolutions/' + self.contestcode + '/' + self.pcode + '_' + str(i) + '_' + str(self.sid) + getExtension(self.lang), 'w')
 		else:
-			opfile = open(Config.user + '_CodechefGitterSolutions\\' + self.contestcode + '\\' + self.pcode + '_' + str(i) + '_' + str(self.sid) + getExtension(self.lang), 'w')
+			opfile = open(Config.codechefUser + '_CodechefGitterSolutions/' + self.contestcode + '/' + self.pcode + '_' + str(i) + '_' + str(self.sid) + getExtension(self.lang), 'w')
 		opfile.write(HTMLParser.HTMLParser().unescape(html)[5:-6])
 		pass
