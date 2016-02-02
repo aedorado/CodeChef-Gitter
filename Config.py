@@ -1,7 +1,8 @@
 class Config(object):
 	codechefUser = ''
 	githubUser = ''
-	gitpasswd = ''
+	githubPasswd = ''
+	githubRepo = ''
 
 	pass
     

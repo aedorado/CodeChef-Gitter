@@ -55,7 +55,7 @@ class Problem:
 
 			sid = tds[0].get_text()
 
-			path_list = glob.glob(Config.codechefUser + '_CodechefGitterSolutions/' + self.contestcode +'/*' + self.pcode + '*')
+			path_list = glob.glob(Config.githubRepo + '/' + self.contestcode +'/*' + self.pcode + '*')
 			
 			cont = False
 			for path in path_list:
@@ -75,9 +75,9 @@ class Problem:
 		print str(accepted_sols) + ' accepted submissions.'
 		print str(len(self.submissionList)) + ' need to be updated.'
 
-	def fetchAllSubmissions(self):
+	def fetchAllSubmissions(self):				# fetch all submissions of a given problem
 		i = 0
 		for submission in self.submissionList:
-			submission.fetchAndSave(i)
+			submission.fetchAndSave(i)			# fetch each submissions of a given problem
 			i = i + 1
 		pass

@@ -4,6 +4,7 @@ problemlist = []
 
 def buildProblemListAndFileStructure(user):
 	url = 'https://www.codechef.com/users/' + user
+	print '\nAttempting First Fetch'
 
 	OK = False
 	while OK is False:
@@ -24,18 +25,18 @@ def buildProblemListAndFileStructure(user):
 		if len(tdp.findAll('b')) != 0 and len(tdp.findAll('span')) != 0:
 			finaltdp.append(tdp)
 
-	if not os.path.exists(user + '_CodechefGitterSolutions/'):		# if directory doesn't exist
-		print 'Creating Directory: ' + user + '_CodechefGitterSolutions/'
-		os.makedirs(user + '_CodechefGitterSolutions/')
+	if not os.path.exists(Config.githubRepo):		# if directory doesn't exist
+		print 'Creating Directory: ' + Config.githubRepo
+		os.makedirs(Config.githubRepo)
 
 	for tdp in finaltdp:
 		contestcode = tdp.find('b')
 		contestcode = contestcode.get_text()
 		print contestcode
 
-		if not os.path.exists(user + '_CodechefGitterSolutions/' + contestcode + '/'):		# if directory doesn't exist
+		if not os.path.exists(Config.githubRepo + '/' + contestcode + '/'):		# if directory doesn't exist
 			# print 'Creating Directory: CodechefGitterSolutions/' + contestcode + '/'
-			os.makedirs(user + '_CodechefGitterSolutions/' + contestcode + '/')				# create directory 
+			os.makedirs(Config.githubRepo + '/' + contestcode + '/')				# create directory 
 
 		problems = tdp.findAll('a');
 
