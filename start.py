@@ -16,7 +16,7 @@ elif len(sys.argv) == 3 and sys.argv[1] == 'fetch':
     print 'Fetch and save from Codechef'
 else:
     sys.exit(
-        'Kindly follow correct format for input.\n\tpython teststrt.py fetch <codechef-username>\nOR\n\tpython strt.py fetch <codechef-username> git-push <github-username>/<github-repo>')
+        'Kindly follow correct format for input.\n\tpython start.py fetch <codechef-username>\nOR\n\tpython start.py fetch <codechef-username> git-push <github-username>/<github-repo>')
 
 Config.codechefUser = sys.argv[2]
 
