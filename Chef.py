@@ -76,4 +76,5 @@ def fetchSubmissions():
     for problem in problemlist:
         problem.fetchAllSubmissions()
         fetchedCount = fetchedCount + len(problem.submissionList)
-        print str(float(fetchedCount * 100) / totalFetchCount)[0:5] + '% done.\n'
+        if fetchedCount is not 0:
+            print str(float(fetchedCount * 100) / totalFetchCount)[0:5] + '% done.\n'
