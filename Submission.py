@@ -1,9 +1,5 @@
 from GitterClasses import *
 
-
-def getExtension(lang):
-    return '.cpp'
-
 # submission class
 
 
@@ -28,23 +24,32 @@ class Submission:
             except urllib2.HTTPError as e:
                 print 'Failure.\nAn HTTP error occured : ' + str(e.code)
                 print 'Refetching..'
-    # except urllib2.URLError, e:
-    # 	print e.args
 
         html = response.read()
         if i != 0:
             opfile = open(
                 Config.githubRepo + '/' + self.contestcode + '/' + self.pcode + '_' + str(
                     i) + '_' + str(
-                        self.sid) + getExtension(
+                        self.sid) + self.getExtension(
                             self.lang),
                  'w')
         else:
             opfile = open(
                 Config.githubRepo + '/' + self.contestcode + '/' + self.pcode + '_' + str(
                     i) + '_' + str(
-                        self.sid) + getExtension(
+                        self.sid) + self.getExtension(
                             self.lang),
                  'w')
         opfile.write(HTMLParser.HTMLParser().unescape(html)[5:-6])
         pass
+
+
+    def getExtension(self, lang):
+        if lang.find('JAVA') >= 0:
+            return '.java'
+        if lang.find('PYTH') >= 0:
+            return '.py'
+        if lang.find('C++') >= 0:
+            return '.cpp'
+        if lang.find('C') >= 0:
+            return '.c'

@@ -14,11 +14,11 @@ if len(sys.argv) == 5 and sys.argv[1] == 'fetch' and sys.argv[3] == 'git-push':
         git.clone()
 elif len(sys.argv) == 3 and sys.argv[1] == 'fetch':
     print 'Fetch and save from Codechef'
+    Config.codechefUser = sys.argv[2]
+    Config.githubRepo = sys.argv[2]     # to set name of local directory as codechefUsername
 else:
     sys.exit(
         'Kindly follow correct format for input.\n\tpython start.py fetch <codechef-username>\nOR\n\tpython start.py fetch <codechef-username> git-push <github-username>/<github-repo>')
-
-Config.codechefUser = sys.argv[2]
 
 Chef.buildProblemListAndFileStructure(Config.codechefUser)
 Chef.updateSubmissionList()
