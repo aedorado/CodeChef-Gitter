@@ -4,7 +4,7 @@ A tool to save and update all solutions submitted on CodeChef to GitHub.
 
 ####To save all submissions locally :
 ```bash
-python test.py fetch codechef-username
+$ python test.py fetch codechef-username
 ```
 ####To save all submissions locally and push to GitHub :
 ```bash
